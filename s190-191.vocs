@@ -1,0 +1,79 @@
+$station 1
+$page 190
+$unit 2
+
+$box-start: At American schools
+
+locker | Schließfach; Spind
+morning message | morgendliche Ansprache
+principal | Schulleiter*in
+pledge of allegiance | Treueid
+pledge; promise | Versprechen
+class | Unterrichtsstunde; Kurs
+Math | Mathe; Mathematik
+elective | Wahlfach
+study hall period | Freistunde
+pass | Ausweiss; Pass
+extracurricular | Auserhalb des Lehrplans; außer unterricht
+cheerleader | Cheerleader
+detention | Nachsitzen
+campus | Campus; Schulgelände
+vacation | Ferien; Uhrlaub
+dress code | Kleiderordnung; Bekleidungsvorschriften
+
+$box-none
+
+exchange | Austausch
+nowhere | nirgendwo*in
+familiar| vertraut; bekannt
+keep; kept | aufbewahren; behalten
+be able to | können; fähig sein
+true | wahr; treu
+false| falsch
+journalism | Journalistik; Journalismus
+study | studieren; lernen
+strict| streng; strikt
+hall | Flur; Korridor; Diele
+bathroom | Bad*ezimmer
+for example | zum Beispiel
+example | Beispiel
+end | ende; beenden; aufhören; enden
+competition | Konkurrenz
+
+$page 191
+
+awesome | super; spitze
+host family | Gastfamilie
+blast | Wahnsinnsspaß
+
+$station 2
+$box-start: Describing people
+
+helpful | hilfsbereit
+cooperation | kooperativ; hilfsbereit
+responsible | verantwortlich; verantwortungsvoll
+bossy | rechthaberisch
+unmotivated | unmotivirt
+lazy | faul
+hard-working| fleißig
+generous | großzügig
+rude | unhöflich; unverschämt
+selfish | selbstsüchtig
+shy | schüchtern
+
+$box-none
+
+outside | außerhalb
+earn | verdienen
+year-old | jährig; Jahre alt
+allowance| Taschengeld
+girlfriend | Freundin
+_ad; advertisement | _motherfucker Webung; Werbung; Anzeige; Werbespot
+job title | Stellenbezeichnung; Berufsbezeichnung
+sales associate | Verkäufer*in
+part-time| Teilzeit; Halbtags
+eduction | Ausbildung; Erziehung; Bildung
+apply (for) | sich bewerben
+interview | Vorstellungsgespräch
+manager | Manager*in; Geschäftsführer*in
+steal; stole; stolen | stehlen
