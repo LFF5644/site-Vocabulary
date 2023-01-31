@@ -31,10 +31,7 @@ function onVocUrlChange(data,actions,receive=false){
 		];
 		let line="";
 		for(line of data.split("\n")){
-			if(ignoreChars.some(item=>line.startsWith(item))){
-				continue;
-			}
-			if(!line){
+			if(ignoreChars.some(item=>line.startsWith(item))||!line){
 				continue;
 			}
 			vocList.push(line);

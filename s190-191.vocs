@@ -1,4 +1,4 @@
-$station 1
+$station: 1
 $page 190
 $unit 2
 
@@ -46,7 +46,7 @@ awesome | super; spitze
 host family | Gastfamilie
 blast | Wahnsinnsspaß
 
-$station 2
+$station: 2
 $box-start: Describing people
 
 helpful | hilfsbereit
@@ -77,3 +77,26 @@ apply (for) | sich bewerben
 interview | Vorstellungsgespräch
 manager | Manager*in; Geschäftsführer*in
 steal; stole; stolen | stehlen
+
+$page 192
+
+minimum | Minimum; Minimal
+wage | Lohn
+co-worker | Arbeitskollege*in
+sort | sortieren
+tease| hänseln
+throw| werfen
+such | solch
+behavior | Verhalten
+working hours | Arbeit
+break | Pause
+bonus | Bonus; Prämie
+feedback | Feedback; Rückmeldung
+pair | Paar
+dog walker | Hundeausführer*in
+per | pro
+paperboy | Zeitungsausführer*in
+papergirl| Zeitungsausführer*in
+take care of sb | sich um jemanden kümmern
+
+$station: Reading Corner
