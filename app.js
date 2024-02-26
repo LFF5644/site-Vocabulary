@@ -1,18 +1,23 @@
 const model={
 	init:()=>({
-		vocabularyIndex:0,
-		vocabularyListUrl:"s190-191.vocs",
-		vocabularyList:["$description: Demo","hello|Hallo"],
+		vocabularyIndex: -1,
+		vocabularyListUrl: "s190-191.vocs",
+		vocabularyList: [{id: 0,lang0:["hello and Welcome"],lang1:["Hallo und Willkommen"]}],
 	}),
-	changeVocabularyIndex:(state,vocabularyIndex)=>pushToObject([
-		state,
-		{vocabularyIndex},
-	]),
-	changeVocabularyList:(state,vocList)=>pushToObject([
-		state,
-		{vocabularyList:vocList},
-	]),
+	setVocabularyIndex:(state,vocabularyIndex)=>({
+		...state,
+		vocabularyIndex,
+	}),
+	setVocabularyList:(state,vocabularyList)=>({
+		...state,
+		vocabularyList,
+	}),
 };
+function newId(){
+	if(!window.idCount) idCount=0;
+	window.idCount+=1;
+	return idCount;
+}
 function download(url,func,args0,args1,args2){
 	fetch(url)
 		.then(res=>res.text())
@@ -21,40 +26,45 @@ function download(url,func,args0,args1,args2){
 function onVocUrlChange(data,actions,receive=false){
 	if(!receive){
 		if(window.indexMode=="live"){data="/p/Vocabulary/"+data;}
-		else{data="https://lff.l3p3.de/p/Vocabulary/"+data;}
+		else{data="https://lff.one/p/Vocabulary/"+data;}
 		download(data,onVocUrlChange,actions,true);
 	}else if(receive){
 		const vocList=[];
 		const ignoreChars=[
 			"//",
 			"#",
+			"$",
 		];
-		let line="";
-		for(line of data.split("\n")){
+		for(const line of data.split("\n").map(item=>item.trim())){
 			if(ignoreChars.some(item=>line.startsWith(item))||!line){
 				continue;
 			}
-			vocList.push(line);
+			//console.log(line);
+			let vocabularyLine=[];
+			for(const vocabularies of line.split("|").map(item=>item.trim())){
+				//console.log(vocabularies);
+				let push=[];
+				if(vocabularies.includes(";")) push=vocabularies.split(";").map(item=>item.trim());
+				else push=[vocabularies];
+				vocabularyLine.push(push);
+			}
+			if(vocabularyLine.length!==2) continue;
+			vocabularyLine={
+				id: newId(),
+				lang0: vocabularyLine[0],
+				lang1: vocabularyLine[1],
+			};
+			vocList.push(vocabularyLine);
 		}
-		actions.changeVocabularyList(vocList);
+		console.log(vocList);
+		actions.setVocabularyList(vocList);
 	}
-}
-function pushToObject(objects){
-	const resultObject=new Object();
-	let o={};
-	for(o of objects){
-		const keysInObject=Object.keys(o);
-		for(key of keysInObject){
-			resultObject[key]=o[key];
-		}
-	}
-	return resultObject;
 }
 function IndexVocabularyList({I:voc,actions}){
-	console.log(voc)
+	console.log(voc);
 	return[
 		lui.node_dom("p",{
-			innerText:voc,
+			innerText: voc.lang0.join("; ")+" | "+voc.lang1.join("; ")
 		})
 	];
 }
@@ -73,13 +83,12 @@ function main(){
 		const [state,actions]=hook_model(model);
 		hook_effect(onVocUrlChange,[state.vocabularyListUrl,actions])
 		return[null,[
-			node_dom("h1[innerText=Vocabeln Werden Hier Später erscheinen!]"),
-			node_dom("p[innerText=Aber es functonirt alles (sugar noch unter window xp von 2001 !)]"),
+			node_dom("h1[innerText=Vokabeln Werden Hier Später erscheinen!]"),
 			node_dom("p",{
-				innerText:`Vocabel: ${state.vocabularyIndex}`,
+				innerText:`Vokabel: ${state.vocabularyIndex}`,
 			}),
 			node_dom("button[innerText=CLICK!]",{
-				onclick:()=>{actions.changeVocabularyIndex('DONT CLICK ME!')}
+				onclick:()=>{actions.setVocabularyIndex("DON'T CLICK ME!")}
 			}),
 			node_map(IndexVocabularyList,state.vocabularyList,{actions}),
 		]];
