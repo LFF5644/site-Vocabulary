@@ -1,21 +1,33 @@
-<!DOCTYPE html>
+<?
+	const {importHead}=globals.functions;
+	const {hostname}=require("os");
+	const isDev=hostname()!=="lff-raspberrypi"&&!input.noDev;
+	const path="/p/Vocabulary/";
+?><!DOCTYPE html>
 <!--CREATED 13.09.2022 UM 17:53-->
 <!--RENEWED 30.11.2022 UM 21:51-->
 <!--RENEWED 26.02.2024 UM 10:24-->
 <html>
 <head>
-	<?=globals.tmp_head("learn Vocabulary",input)?>
-	<link rel=stylesheet href=/p/Vocabulary/style.css>
-	<script>window.indexMode="live";</script>
-	<script blocking=render defer src=/p/Vocabulary/app.js></script>
-	<script onload="window.main();" blocking=render defer src=https://cdn.jsdelivr.net/gh/L3P3/lui@v1.3.x/lui.legacy.js></script>
+	<?=importHead({
+		input,
+		title: "Vokabel-Helfer",
+		tabs: 1,
+		css:[
+			"/css/main.css",
+			path+"style.css",
+		],
+		script:[
+			"https://cdn.jsdelivr.net/gh/L3P3/lui@v1.x/"+(isDev&&!input.legacy?"lui.dev.js":"lui.js"),
+		],
+		scriptLegacy:[
+			"/files/other/lui/lui.legacy.js",
+		],
+	})?>
 </head>
 <body>
-<center>
-<noscript><h1>JavaScript <b>Einschalten</b> oder <b>Browser Updaten</b></h1></noscript>
-<script>document.write(`<h1>Das Web-Frame-Work ist beschädigt! diesen Fehler bitte <a>Melden</a></h1>`)</script>
-</center>
-<script>
-</script>
+	<noscript><h1>JavaScript <b>Einschalten</b> oder <b>Browser Updaten</b></h1></noscript>
+	<script>document.write(`<h1>Das Web-Frame-Work ist beschädigt! diesen Fehler bitte <a href="https://github.com/LFF5644/site-Vocabulary/issues/new?title=lui.js%20konnte%20nicht%20geladen/gestartet%20oder%20fehlerhaft">Melden</a> auf GitHub</h1>`)</script>
+	<script blocking=render defer src=/p/Vocabulary/app.js></script>
 </body>
 </html>
