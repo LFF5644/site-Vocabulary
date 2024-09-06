@@ -124,7 +124,7 @@ function ViewVocabularyTest({state,actions}){
 				const answer=event.target.answer.value;
 				event.target.answer.value="";
 
-				const correct=translationVocabulary.some(item=>item===answer);
+				const correct=translationVocabulary.some(item=>item.toLowerCase()===answer.toLowerCase());
 				if(correct){
 					actions.addPoint();
 					actions.randomVocabularyIndex();
