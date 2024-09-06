@@ -14,7 +14,7 @@ const model={
 		view: "vocabularyList",
 		vocabularyIndex: 0,
 		vocabularyList: [{id: 0,lang0:["hello and Welcome"],lang1:["Hallo und Willkommen"]}],
-		vocabularyListUrl: "vocs/unit2.vocs",
+		vocabularyListUrl: "vocs/unit1.vocs",
 		points: 0,
 	}),
 	randomVocabularyIndex: state=>({
