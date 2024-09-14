@@ -8,22 +8,55 @@ const {
 	node,
 }=lui;
 
+function newId(){
+	if(!window.idCount) window.idCount=0;
+	window.idCount+=1;
+	return window.idCount;
+}
+
 const model={
 	init:()=>({
 		translateTo: 1,
 		view: "vocabularyList",
 		vocabularyIndex: 0,
-		vocabularyList: [{id: 0,lang0:["hello and Welcome"],lang1:["Hallo und Willkommen"]}],
-		vocabularyListUrl: "vocs/unit1.vocs",
+		//vocabularyList: [{id: 0,lang0:["hello and Welcome"],lang1:["Hallo und Willkommen"]}],
+		//vocabularyListUrl: "vocs/unit1.vocs",
+		vocabularyLists: [
+			{
+				id: newId(),
+				url: "vocs/unit2.vocs",
+				label: "Unit 2 (Klasse 9 HSTO)",
+				//vocabularyList: [], // Auto Generate!
+				vocabularyList: null,
+			},
+			{
+				id: newId(),
+				url: "vocs/unit1.vocs",
+				label: "Unit 1",
+				//vocabularyList: [], // Auto Generate!
+				vocabularyList: null,
+			},
+		],
+		vocabularyListId: -1,
 		points: 0,
 	}),
 	randomVocabularyIndex: state=>({
 		...state,
-		vocabularyIndex: pickItemIndex(state.vocabularyList),
+		vocabularyIndex: pickItemIndex(state.vocabularyLists.find(item=>item.id===state.vocabularyListId).vocabularyList),
 	}),
-	setVocabularyList:(state,vocabularyList)=>({
+	setVocabularyList:(state,id,vocabularyList)=>({
 		...state,
-		vocabularyList,
+		vocabularyLists: state.vocabularyLists.map(item=>
+			item.id!==id?item:{
+				...item,
+				id: item.id,
+				vocabularyList,
+			}
+		),
+	}),
+	setVocabularyListId:(state,vocabularyListId)=>({
+		...state,
+		vocabularyListId,
 	}),
 	setView:(state,view)=>({
 		...state,
@@ -38,21 +71,28 @@ const model={
 		points: 0,
 	}),
 };
-function newId(){
-	if(!window.idCount) idCount=0;
-	window.idCount+=1;
-	return idCount;
-}
-function download(url,func,args0,args1,args2){
+function download(url,func,...args){
 	fetch(url)
 		.then(res=>res.text())
-		.then(res=>func(res,args0,args1,args2))
+		.then(res=>func(res,...args))
+	;
 }
-function onVocUrlChange(data,actions,receive=false){
+function checkForDownloadVocList(vocabularyListId,vocabularyLists,actions){
+	if(vocabularyListId===-1) return;
+	const entry=vocabularyLists.find(item=>item.id===vocabularyListId);
+	if(entry.vocabularyList) return;
+
+	console.log("checkForDownloadVocList:",vocabularyListId,vocabularyLists);
+	onVocUrlChange({
+		url: entry.url,
+		id: entry.id,
+	},actions);
+}
+function onVocUrlChange(data,actions,receive=false,id){
 	if(!receive){
-		if(window.indexMode=="live"){data="/p/Vocabulary/"+data;}
-		else{data="https://lff.one/p/Vocabulary/"+data;}
-		download(data,onVocUrlChange,actions,true);
+		if(window.indexMode==="live"){data.url="/p/Vocabulary/"+data.url;}
+		else{data.url="https://lff.one/p/Vocabulary/"+data.url;}
+		download(data.url,onVocUrlChange,actions,true,data.id);
 	}else if(receive){
 		const vocList=[];
 		const ignoreChars=[
@@ -80,15 +120,17 @@ function onVocUrlChange(data,actions,receive=false){
 				lang1: vocabularyLine[1],
 			};
 			vocList.push(vocabularyLine);
+			console.log(vocabularyLine);
 		}
-		//console.log(vocList);
-		actions.setVocabularyList(vocList);
+		console.log("Downloaded Vocabulary List for ID: "+id+", with "+vocList.length+" Vocabularies.");
+
+		actions.setVocabularyList(id,vocList);
 	}
 }
-function IndexVocabularyList({I:voc,actions}){
+function IndexVocabulary({I:voc}){
 	//console.log(voc);
 	return[
-		lui.node_dom("p",{
+		node_dom("p",{
 			innerHTML: `${voc.lang0.join("<b style=color:green>;</b> ")} <b style=color:red>|</b> ${voc.lang1.join("<b style=color:green>;</b> ")}`
 		})
 	];
@@ -101,7 +143,8 @@ function pickItem(array){
 	return array[pickItemIndex(array)];
 }
 function ViewVocabularyTest({state,actions}){
-	const vocabularyBlock=state.vocabularyList[state.vocabularyIndex];
+	console.log(state.vocabularyLists.find(item=>item.id===state.vocabularyListId));
+	const vocabularyBlock=state.vocabularyLists.find(item=>item.id===state.vocabularyListId).vocabularyList[state.vocabularyIndex];
 	let askVocabulary=undefined;
 	let translationVocabulary=undefined;
 	if(state.translateTo){
@@ -139,7 +182,7 @@ function ViewVocabularyTest({state,actions}){
 			},
 		},[
 			node_dom("label[innerText=Antwort: ]",null,[
-				node_dom("input[name=answer][autocomplete=off][required][autofocus][style=margin-right:10px]"),
+				node_dom("input[name=answer][autocomplete=off][type=text][required][autofocus][style=margin-right:5px]"),
 			]),
 			node_dom("button[innerText=Überprüfen]"),
 		]),
@@ -159,11 +202,21 @@ function ViewVocabularyTest({state,actions}){
 		]),
 	];
 }
+function IndexVocabularyLists({I:entry,currentVocList}){
+	return[
+		node_dom("option",{
+			innerText: entry.label,
+			selected: entry.id===currentVocList,
+			value: entry.id,
+		}),
+	];
+}
 
 
 init(()=>{
 	const [state,actions]=hook_model(model);
-	hook_effect(onVocUrlChange,[state.vocabularyListUrl,actions]);
+	newId();
+	hook_effect(checkForDownloadVocList,[state.vocabularyListId,state.vocabularyLists,actions]);
 	return[null,[
 		state.view==="vocabularyList"&&
 		node_dom("div",null,[
@@ -171,13 +224,42 @@ init(()=>{
 			node_dom("p",{
 				innerText:`Punkte: ${state.points}`,
 			}),
+			node_dom("select",{
+				onchange: event=>{
+					const newValue=Number(event.target.value);
+					console.log(newValue);
+					actions.setVocabularyListId(newValue);
+				},
+			},[
+				node_map(IndexVocabularyLists,state.vocabularyLists,{currentVocList:state.vocabularyListId}),
+				
+				state.vocabularyListId===-1&&
+				node_dom("option[value=-1][innerText=Vokabeln auswählen]"),
+			]),
 			node_dom("button[innerText=Vokabeln abfragen!]",{
+				disabled: (
+					state.vocabularyListId===-1||
+					state.vocabularyLists.find(item=>item.id===state.vocabularyListId).vocabularyList===null
+				),
 				onclick:()=>{
-					if(state.vocabularyIndex===0) actions.randomVocabularyIndex();
+					if(state.vocabularyId===0) actions.randomVocabularyId();
 					actions.setView("vocabularyTest");
 				},
 			}),
-			node_map(IndexVocabularyList,state.vocabularyList,{actions}),
+
+			state.vocabularyListId===-1&&
+			node_dom("p[innerText=Bitte Vokabel-Liste auswählen]"),
+
+			state.vocabularyListId!==-1&&
+			state.vocabularyLists.find(item=>item.id===state.vocabularyListId).vocabularyList===null&&
+			node_dom("div",null,[
+				node_dom("p[innerText=Vokabel-Liste wird heruntergeladen bitte warten...]"),
+				node_dom("progress"),
+			]),
+
+			state.vocabularyListId!==-1&&
+			state.vocabularyLists.find(item=>item.id===state.vocabularyListId).vocabularyList!==null&&
+			node_map(IndexVocabulary,state.vocabularyLists.find(item=>item.id===state.vocabularyListId).vocabularyList,{actions}),
 		]),
 		state.view==="vocabularyTest"&&
 		node(ViewVocabularyTest,{state,actions}),
