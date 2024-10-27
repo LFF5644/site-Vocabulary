@@ -1,7 +1,7 @@
 <?
 	const {importHead}=globals.functions;
 	const {hostname}=require("os");
-	const isDev=hostname()!=="lff-raspberrypi"&&!input.noDev;
+	const isDev=false; //hostname()!=="lff-raspberrypi"&&!input.noDev;
 	const path="/p/Vocabulary/";
 ?><!DOCTYPE html>
 <!--CREATED 13.09.2022 UM 17:53-->
@@ -13,6 +13,11 @@
 		input,
 		title: "Vokabel-Helfer",
 		tabs: 1,
+		description: "Vokabel-Helfer für mich meine Klasse und meine Schwester und ihre Freunde Programmiert",
+		keywords: [
+			"Vokabel-Helfer", "Vocabulary-Helper", "Vokabeln", "languages", "Klett Red line 5", "Klett Blue line 6",
+			"Lernen", "learn", "school", "homework",
+		],
 		css:[
 			"/css/main.css",
 			path+"style.css",
