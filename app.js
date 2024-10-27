@@ -25,17 +25,30 @@ const model={
 			{
 				id: newId(),
 				url: "vocs/unit2.vocs",
-				label: "Unit 2 (Klasse 9 HSTO)",
+				label: "BL5 - Unit 2 (Klasse 9 HSTO)",
+				//vocabularyList: [], // Auto Generate!
+				vocabularyList: null,
+			},
+   {
+				id: newId(),
+				url: "vocs/RedLine5/unit2/wayIn.vocs",
+				label: "RL5 - Unit 2 - Way in",
 				//vocabularyList: [], // Auto Generate!
 				vocabularyList: null,
 			},
 			{
 				id: newId(),
 				url: "vocs/unit1.vocs",
-				label: "Unit 1",
+				label: "BL6 - Unit 1",
 				//vocabularyList: [], // Auto Generate!
 				vocabularyList: null,
 			},
+			{
+				id: newId(),
+				url: "vocs/BlueLine6/unit2/wayIn.vocs",
+				label: "BL6 - Unit 2 - Way in",
+				vocabularyList: null,
+			}
 		],
 		vocabularyListId: -1,
 		points: 0,
